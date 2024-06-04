@@ -1,0 +1,12 @@
+{
+    "home_en" : "home", 
+    "home_da" : "hjem", 
+    "home_es" : "inicio",
+    "home_it" : "italian_home",
+    "home_de" : "german_home",
+
+    "welcome_en" : "Welcome to my page", 
+    "welcome_da" : "Velkommen til min side",
+    "welcome_es" : "Bienvendo a mi página"
+
+}
