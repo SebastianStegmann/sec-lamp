@@ -11,6 +11,8 @@ try {
     _validate_user_email();
     _validate_user_address();
 
+    // $file_name = "1234iauhsdoa.png"; 
+
     $file_name = _generate_user_profile_picture();
 
     $db = _db();
