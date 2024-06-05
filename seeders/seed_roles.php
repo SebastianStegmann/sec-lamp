@@ -1,10 +1,10 @@
 <?php
-require_once __DIR__.'/../_.php';
+require_once __DIR__ . '/../_.php';
 require_once __DIR__ . '/Faker/autoload.php';
 $faker = Faker\Factory::create();
 
-try{
-   
+try {
+
   $db = _db();
   $q = $db->prepare('DROP TABLE IF EXISTS orders_items');
   $q->execute();
@@ -21,10 +21,13 @@ try{
   $q = $db->prepare('DROP TABLE IF EXISTS users');
   $q->execute();
   $db = _db();
+  $q = $db->prepare('DROP TABLE IF EXISTS profile_pictures');
+  $q->execute();
+  $db = _db();
   $q = $db->prepare('DROP TABLE IF EXISTS roles');
   $q->execute();
 
-  
+
 
 
 
@@ -48,16 +51,7 @@ try{
                       (null, 'employee', $created_at, 0)");
   $q->execute();
 
-  echo "+ roles".PHP_EOL;
-}catch(Exception $e){
+  echo "+ roles" . PHP_EOL;
+} catch (Exception $e) {
   echo $e;
 }
-
-
-
-
-
-
-
-
-
