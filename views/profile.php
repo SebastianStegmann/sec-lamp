@@ -25,7 +25,7 @@ require_once __DIR__ . '/_header.php';
 $db = _db();
 
 $q = $db->prepare(' SELECT user_id, user_name, 
-                      user_last_name, user_email, user_tag_color, user_address, user_deleted_at, user_is_blocked, user_updated_at
+                      user_last_name, user_email, user_tag_color, user_profile_picture_fk, user_address, user_deleted_at, user_is_blocked, user_updated_at
                       FROM users
                       WHERE user_id = :user_id;');
 
@@ -43,6 +43,16 @@ $q->bindValue(':user_id',  $profile_id);
 $q->execute();
 
 $user = $q->fetch();
+$q = $db->prepare('
+      SELECT profile_picture_path
+      FROM profile_pictures
+      WHERE profile_picture_id = :profile_picture_id;
+    ');
+
+$q->bindValue(':profile_picture_id',  $user['user_profile_picture_fk']);
+$q->execute();
+
+$profile_picture = $q->fetch();
 
 var_dump($user);
 
@@ -97,8 +107,19 @@ var_dump($user);
 
   <div>
     <!-- ################## UPDATE USER ################## -->
-    <form id="frm_update_user_info" onsubmit="validate(update_user); return false" method="POST" class="hidden flex-col py-4
-   mx-auto gap-4">
+    <form id="frm_update_user_info" onsubmit="validate(update_user); return false" method="POST"
+      enctype="multipart/form-data"
+      class="hidden flex-col py-4 mx-auto gap-4">
+      
+      <input type="hidden" name="MAX_FILE_SIZE" value="2097152">
+
+      <div class="grid">
+        <label class="flex justify-between" for="user_profile_picture">
+          <span class="">profile picture</span>
+        </label>
+        <img src="<?php echo '../uploads/' . $profile_picture['profile_picture_path']; ?>">
+        <input type="file" name="user_profile_picture" id="user_profile_picture" accept="image/*" data-validate="file" class="">
+      </div>
 
 
       <!-- ?? VALIDATE USER ID ?? TODO -->
