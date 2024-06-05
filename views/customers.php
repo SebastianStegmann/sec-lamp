@@ -12,15 +12,15 @@ if( ! _check_role('1')){
 $db = _db();
 require_once __DIR__ . '/_pagination.php';
 
-$q = $db->prepare(' SELECT user_id, user_name, user_last_name, user_email, user_tag_color, user_is_blocked, user_deleted_at
+$q = $db->prepare(' SELECT user_id, user_name, user_last_name, user_email, user_tag_color, user_profile_picture_fk, user_is_blocked, user_deleted_at
                     FROM users WHERE user_role_fk = 3 LIMIT :limit OFFSET :offset');
 
 // SORT BY DELETED OR NOT
 if (!isset($_GET['sort'])) {
-    $q = $db->prepare(' SELECT user_id, user_name, user_last_name, user_email, user_tag_color, user_is_blocked, user_deleted_at
+    $q = $db->prepare(' SELECT user_id, user_name, user_last_name, user_email, user_tag_color, user_profile_picture_fk, user_is_blocked, user_deleted_at
     FROM users WHERE user_role_fk = 3 LIMIT :limit OFFSET :offset');
 } else {
-    $q = $db->prepare(' SELECT user_id, user_name, user_last_name, user_email, user_tag_color, user_is_blocked, user_deleted_at
+    $q = $db->prepare(' SELECT user_id, user_name, user_last_name, user_email, user_tag_color, user_profile_picture_fk, user_is_blocked, user_deleted_at
     FROM users WHERE user_role_fk = 3 AND user_deleted_at BETWEEN :low AND :high LIMIT :limit OFFSET :offset');
     // set range as either between 0 and 0 or 1 and epoch max
     $low = $_GET['sort'] == 'deleted' ? 1 : 0;
@@ -64,7 +64,17 @@ $users = $q->fetchAll();
     <h1>No customers in the system</h1>
 <?php endif ?>
 
-<?php foreach ($users as $user) : ?>
+<?php foreach ($users as $user) : 
+    $profile_picture_q = $db->prepare('
+        SELECT profile_picture_path
+        FROM profile_pictures
+        WHERE profile_picture_id = :user_profile_picture_fk
+    ');
+    $profile_picture_q->bindValue( ':user_profile_picture_fk', $user['user_profile_picture_fk'] );
+    $profile_picture_q->execute();
+    $image_path = $profile_picture_q->fetch();
+    
+    ?>
     <div class="grid justify-items-between grid-cols-1 xs:grid-cols-2 md:grid-cols-[7fr,2fr] border-border border-b md:grid-rows-1 py-2  ">
         <div class="grid grid-rows-2 grid-cols-[3fr,30fr]">
             <!-- Hidden user id -->
@@ -72,7 +82,7 @@ $users = $q->fetchAll();
             <!-- Cirle -->
             <div class="grid self-center mr-1 place-self-center row-span-2 items-center justify-center w-8 h-8  text-sm rounded-full" style="background-color: <?php out($user['user_tag_color']); ?>">
                 <!-- letter in circle -->
-                <p class=""> <?php out($user['user_name'][0]) ?> </p>
+                <img src="../uploads/<?= $image_path['profile_picture_path']; ?>">
             </div>
 
             <p class=""><?php out($user['user_name'] . ' ' . $user['user_last_name']) ?></p>

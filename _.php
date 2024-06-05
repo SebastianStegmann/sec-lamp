@@ -117,6 +117,7 @@ function _validate_user_email()
 // ##############################
 define('USER_PASSWORD_MIN', 6);
 define('USER_PASSWORD_MAX', 50);
+
 function _validate_user_password()
 {
 
@@ -146,6 +147,116 @@ function _validate_user_confirm_password()
 	$_POST['user_confirm_password'] = trim($_POST['user_confirm_password']);
 	if ($_POST['user_password'] != $_POST['user_confirm_password']) {
 		throw new Exception($error, 400);
+	}
+}
+
+// ##############################
+define('IMAGE_MIME_TYPES', array(
+    'image/jpeg',
+    'image/png',
+));
+
+function _validate_user_profile_picture() {
+	if ( !isset( $_POST['user_current_profile_picture'] ) ) {
+		throw new Exception('Current user profile picture missing.', 500);
+	}
+	if ( !isset( $_FILES['user_profile_picture'] ) ) {
+		throw new Exception('Error handling image.', 500);
+	}
+
+	// Empty input field is still valid
+	if ( $_FILES['user_profile_picture']['size'] == 0 ) {
+		// nothing
+	}
+
+	else {
+		// Ensure fileupload was done via HTTP POST
+		if ( !is_uploaded_file( $_FILES['user_profile_picture']['tmp_name'] ) ) {
+			throw new Exception('Invalid file upload method.', 400);
+		}
+
+		$file_type = $_FILES['user_profile_picture']['type'];
+		$upload_status = $_FILES['user_profile_picture']['error'];
+
+		if ( !in_array( $file_type, IMAGE_MIME_TYPES ) ) {
+			throw new Exception('Invalid file type. Only JPEG and PNG files are allowed.', 400);
+		}
+
+		if ( $upload_status !== UPLOAD_ERR_OK ) {
+			switch ( $upload_status ) {
+				case UPLOAD_ERR_FORM_SIZE:
+					throw new Exception('File size is too large.', 400);
+				case UPLOAD_ERR_PARTIAL:
+					throw new Exception('File upload could not complete.', 400);
+				case UPLOAD_ERR_NO_TMP_DIR:
+					// C:\xampp\tmp
+					throw new Exception('Missing temporary folder.', 500);
+				case UPLOAD_ERR_CANT_WRITE:
+					throw new Exception('Failed to write file.', 500);
+				case UPLOAD_ERR_EXTENSION:
+					// php extensions/settings/alike
+					throw new Exception('File upload stopped by extension.', 400);
+				default:
+					throw new Exception('Error uploading image.', 500);
+			}
+		}
+	}
+
+}
+
+
+function _generate_user_profile_picture() {
+	$file = $_FILES['user_profile_picture'];
+
+	if ( $_FILES['user_profile_picture']['size'] == 0 ) {
+		return false;
+	}
+
+	$target_dir = "../uploads/";
+
+	// User name (has already been validated)
+	$user_name = $_POST['user_name'];
+
+	// Generate current UNIX timestamp
+	$timestamp = time();
+
+	// Generate a random string
+	$uniqid = uniqid();
+
+	$file_extension = pathinfo( $file['name'], PATHINFO_EXTENSION );
+
+	// Combine the elements to create the unique filename
+	$file_name = $user_name . '_' . $timestamp . '_' . $uniqid . '.' . $file_extension;
+
+	$target_file = $target_dir . $file_name;
+
+    while ( file_exists( $target_file ) ) {
+        // Generate a new unique identifier
+        $uniqid = uniqid();
+
+        // Update the filename with the new identifier
+        $file_name = $user_name . '_' . $timestamp . '_' . $uniqid . '.' . $file_extension;
+
+        $target_file = $target_dir . $file_name;
+    }
+
+	if ( move_uploaded_file( $file['tmp_name'], $target_file ) ) {
+        return $file_name; // Return the path to the moved file
+    }
+
+    throw new Exception('Failed to move uploaded file.', 500);
+}
+
+function _remove_user_profile_picture($file_name) {
+    $target_dir = __DIR__ . "/uploads/";
+    $file_path = $target_dir . $file_name;
+
+	if ( !file_exists( $file_path ) ) {
+		throw new Exception('Could not find file.:' . $file_path, 500);
+	}
+
+	if ( !unlink( $file_path ) ) {
+		throw new Exception('Could not delete file.', 500);
 	}
 }
 

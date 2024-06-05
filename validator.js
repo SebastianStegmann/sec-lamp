@@ -13,6 +13,19 @@ function validate(callback) {
 	})
 	form.querySelectorAll("[data-validate]").forEach(function (element) {
 		switch (element.getAttribute("data-validate")) {
+			case "file":
+				let file = element.files[0];
+
+				if( file.size > 2 * 1024 * 1024 ) {
+					element.classList.add("validate_error")
+					element.style.border = `1px solid ${validate_error}`
+				}
+
+				else if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png') {
+					element.classList.add("validate_error")
+					element.style.border = `1px solid ${validate_error}`
+				}
+				break;
 			case "str":
 				if (element.value.length < parseInt(element.getAttribute("data-min")) ||
 					element.value.length > parseInt(element.getAttribute("data-max"))
