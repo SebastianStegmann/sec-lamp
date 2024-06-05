@@ -157,9 +157,6 @@ define('IMAGE_MIME_TYPES', array(
 ));
 
 function _validate_user_profile_picture() {
-	if ( !isset( $_POST['user_current_profile_picture'] ) ) {
-		throw new Exception('Current user profile picture missing.', 500);
-	}
 	if ( !isset( $_FILES['user_profile_picture'] ) ) {
 		throw new Exception('Error handling image.', 500);
 	}
@@ -214,6 +211,9 @@ function _generate_user_profile_picture() {
 
 	$target_dir = "../uploads/";
 
+	if (!is_writable($target_dir)) {
+		throw new Exception('Upload directory is not writable.');
+	}	
 	// User name (has already been validated)
 	$user_name = $_POST['user_name'];
 
