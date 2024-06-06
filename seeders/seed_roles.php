@@ -15,6 +15,9 @@ try {
   $q = $db->prepare('DROP TABLE IF EXISTS items');
   $q->execute();
   $db = _db();
+  $q = $db->prepare('DROP TABLE IF EXISTS partners');
+  $q->execute();
+  $db = _db();
   $q = $db->prepare('DROP TABLE IF EXISTS employees');
   $q->execute();
   $db = _db();

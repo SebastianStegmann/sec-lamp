@@ -152,19 +152,21 @@ function _validate_user_confirm_password()
 
 // ##############################
 define('IMAGE_MIME_TYPES', array(
-    'image/jpeg',
-    'image/png',
+	'image/jpeg',
+	'image/png',
 ));
 define('IMAGE_EXTENSIONS', array(
 	'jpg', 'jpeg', 'png'
 ));
 
-function _validate_user_profile_picture() {
-	if ( !isset( $_FILES['user_profile_picture'] ) ) {
+function _validate_user_profile_picture()
+{
+	if (!isset($_FILES['user_profile_picture'])) {
 		throw new Exception('Error handling image.', 500);
 	}
 
 	// Empty input field is still valid
+
 	if ( $_FILES['user_profile_picture']['size'] == 0 ) {
 		return true;
 	}
@@ -196,6 +198,7 @@ function _validate_user_profile_picture() {
 		}
 	}
 
+
 	$file_type = $_FILES['user_profile_picture']['type'];
 	$file_size = $_FILES['user_profile_picture']['size'];
 	$max_file_size = 2097152;
@@ -224,14 +227,14 @@ function _validate_user_profile_picture() {
 	if ($image_info[2] !== IMAGETYPE_JPEG && $image_info[2] !== IMAGETYPE_PNG) {
 		throw new Exception('Invalid image format. Only JPEG, JPG and PNG files are allowed.', 400);
 	}
-
 }
 
 
-function _generate_user_profile_picture() {
+function _generate_user_profile_picture()
+{
 	$file = $_FILES['user_profile_picture'];
 
-	if ( $_FILES['user_profile_picture']['size'] == 0 ) {
+	if ($_FILES['user_profile_picture']['size'] == 0) {
 		return false;
 	}
 
@@ -239,7 +242,7 @@ function _generate_user_profile_picture() {
 
 	if (!is_writable($target_dir)) {
 		throw new Exception('Upload directory is not writable.');
-	}	
+	}
 	// User name (has already been validated)
 	$user_name = $_POST['user_name'];
 
@@ -249,39 +252,40 @@ function _generate_user_profile_picture() {
 	// Generate a random string
 	$uniqid = uniqid();
 
-	$file_extension = pathinfo( $file['name'], PATHINFO_EXTENSION );
+	$file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
 
 	// Combine the elements to create the unique filename
 	$file_name = $user_name . '_' . $timestamp . '_' . $uniqid . '.' . $file_extension;
 
 	$target_file = $target_dir . $file_name;
 
-    while ( file_exists( $target_file ) ) {
-        // Generate a new unique identifier
-        $uniqid = uniqid();
+	while (file_exists($target_file)) {
+		// Generate a new unique identifier
+		$uniqid = uniqid();
 
-        // Update the filename with the new identifier
-        $file_name = $user_name . '_' . $timestamp . '_' . $uniqid . '.' . $file_extension;
+		// Update the filename with the new identifier
+		$file_name = $user_name . '_' . $timestamp . '_' . $uniqid . '.' . $file_extension;
 
-        $target_file = $target_dir . $file_name;
-    }
+		$target_file = $target_dir . $file_name;
+	}
 
-	if ( move_uploaded_file( $file['tmp_name'], $target_file ) ) {
-        return $file_name; // Return the path to the moved file
-    }
+	if (move_uploaded_file($file['tmp_name'], $target_file)) {
+		return $file_name; // Return the path to the moved file
+	}
 
-    throw new Exception('Failed to move uploaded file.', 500);
+	throw new Exception('Failed to move uploaded file.', 500);
 }
 
-function _remove_user_profile_picture($file_name) {
-    $target_dir = __DIR__ . "/uploads/";
-    $file_path = $target_dir . $file_name;
+function _remove_user_profile_picture($file_name)
+{
+	$target_dir = __DIR__ . "/uploads/";
+	$file_path = $target_dir . $file_name;
 
-	if ( !file_exists( $file_path ) ) {
+	if (!file_exists($file_path)) {
 		throw new Exception('Could not find file.:' . $file_path, 500);
 	}
 
-	if ( !unlink( $file_path ) ) {
+	if (!unlink($file_path)) {
 		throw new Exception('Could not delete file.', 500);
 	}
 }

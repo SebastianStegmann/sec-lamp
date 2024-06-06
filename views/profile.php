@@ -25,7 +25,7 @@ require_once __DIR__ . '/_header.php';
 $db = _db();
 
 $q = $db->prepare(' SELECT user_id, user_name, 
-                      user_last_name, user_email, user_tag_color, user_profile_picture_fk, user_address, user_deleted_at, user_is_blocked, user_updated_at
+                      user_last_name, user_email, user_tag_color, user_profile_picture_fk, user_address, user_deleted_at, user_is_blocked, user_updated_at, user_role_fk
                       FROM users
                       WHERE user_id = :user_id;');
 
@@ -54,7 +54,6 @@ $q->execute();
 
 $profile_picture = $q->fetch();
 
-var_dump($user);
 
 ?>
 
@@ -64,6 +63,7 @@ var_dump($user);
   </h1>
 </div>
 
+<?php $user['user_role_fk'] == '2' ? require_once __DIR__ . '/_hide.php' : ''; ?>
 <div class="grid grid-cols-1 lg:grid-cols-[1fr,1fr] mr-4 rounded-md">
   <div>
     <p><?php out($user['user_name'] . ' ' . $user['user_last_name']) ?></p>
@@ -80,14 +80,13 @@ var_dump($user);
     } else {
       // session[user][visited_user]
       $q->bindValue(':user_id',  $_SESSION['user']['user_id']);
-
     }
     $q->execute();
 
     $salary = $q->fetch(); ?>
-    <?php echo isset( $salary['employee_salary'] ) ? '<p>Salary: ' . $salary['employee_salary'] .' kr.</p>' : ''; ?>
-    <?php echo isset( $salary['employee_hourly_pay'] ) ? '<p>Hourly pay: ' . $salary['employee_hourly_pay'] .' kr.</p>' : ''; ?>
-   
+    <?php echo isset($salary['employee_salary']) ? '<p>Salary: ' . $salary['employee_salary'] . ' kr.</p>' : ''; ?>
+    <?php echo isset($salary['employee_hourly_pay']) ? '<p>Hourly pay: ' . $salary['employee_hourly_pay'] . ' kr.</p>' : ''; ?>
+
 
     <?php if (isset($_SESSION) && $_SESSION['user']['user_role_fk'] == "1") : ?>
       <p>Admin info</p>
@@ -104,10 +103,8 @@ var_dump($user);
 
   <div>
     <!-- ################## UPDATE USER ################## -->
-    <form id="frm_update_user_info" onsubmit="validate(update_user); return false" method="POST"
-      enctype="multipart/form-data"
-      class="hidden flex-col py-4 mx-auto gap-4">
-      
+    <form id="frm_update_user_info" onsubmit="validate(update_user); return false" method="POST" enctype="multipart/form-data" class="hidden flex-col py-4 mx-auto gap-4">
+
       <input type="hidden" name="MAX_FILE_SIZE" value="2097152">
 
       <div class="grid">
@@ -152,14 +149,13 @@ var_dump($user);
         <label for="">
           <span class="">Address</span>
         </label>
-        <input value="<?php out($user['user_address']) ?>" name="user_address" type="text" data-validate="str" data-min="<?= USER_ADDRESS_MIN ?>" data-max="<?= USER_ADDRESS_MAX ?>"
-        class="">
+        <input value="<?php out($user['user_address']) ?>" name="user_address" type="text" data-validate="str" data-min="<?= USER_ADDRESS_MIN ?>" data-max="<?= USER_ADDRESS_MAX ?>" class="">
       </div>
-  
-      
+
+
       <button class=" w-full h-10 bg-button_bg rounded-md" type="submit">Update</button>
 
-        <!-- ################## UPDATE USER PASSWORD ################## -->
+      <!-- ################## UPDATE USER PASSWORD ################## -->
 
     </form>
     <!-- TODO: EDIT USER -->
@@ -209,6 +205,7 @@ var_dump($user);
       </div>
       <button class="w-full h-10 bg-button_bg  rounded-md">Delete profile</button>
     </form>
+
 
   </div>
 </div>
