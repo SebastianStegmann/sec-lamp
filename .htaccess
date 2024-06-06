@@ -25,4 +25,10 @@ RewriteRule ^profile/(.*)$ views/profile.php?user=$1&lang=%1 [NC,L]
 RewriteRule ^customers/sort/(.*)$            views/customers.php?sort=$1 [NC,L]
 RewriteRule ^customers/sort/(.*)?p=(.*)$            views/customers.php?sort=$1&p=$2 [NC,L]
 
-
+# Block access to uploads directory from everyone except localhost
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REMOTE_ADDR} !^127\.0\.0\.1$
+    RewriteCond %{REMOTE_ADDR} !^::1$
+    RewriteRule ^./uploads/ - [F]
+</IfModule>
