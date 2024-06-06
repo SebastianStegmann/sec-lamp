@@ -10,7 +10,7 @@ function _db()
 	try {
 		$user_name = "root";
 		// $user_password = ""; // sqlite
-		$user_password = "root";
+		$user_password = "password";
 		// $db_connection = 'sqlite:' . __DIR__ . '/database/data.sqlite';
 		$db_connection = "mysql:host=localhost; dbname=exam_db_1sem; charset=utf8mb4";
 
