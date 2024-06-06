@@ -4,28 +4,38 @@ require_once __DIR__ . '/Faker/autoload.php';
 $faker = Faker\Factory::create();
 
 try {
-
   $db = _db();
   $q = $db->prepare('DROP TABLE IF EXISTS orders_items');
   $q->execute();
+
   $db = _db();
   $q = $db->prepare('DROP TABLE IF EXISTS orders');
   $q->execute();
+
   $db = _db();
   $q = $db->prepare('DROP TABLE IF EXISTS items');
   $q->execute();
+
+  $db = _db();
+  $q = $db->prepare('DROP TABLE IF EXISTS partners_comments');
+  $q->execute();
+
   $db = _db();
   $q = $db->prepare('DROP TABLE IF EXISTS partners');
   $q->execute();
+
   $db = _db();
   $q = $db->prepare('DROP TABLE IF EXISTS employees');
   $q->execute();
+
   $db = _db();
   $q = $db->prepare('DROP TABLE IF EXISTS users');
   $q->execute();
+
   $db = _db();
   $q = $db->prepare('DROP TABLE IF EXISTS profile_pictures');
   $q->execute();
+
   $db = _db();
   $q = $db->prepare('DROP TABLE IF EXISTS roles');
   $q->execute();

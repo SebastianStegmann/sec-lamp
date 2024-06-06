@@ -387,6 +387,8 @@ textarea::placeholder {
   /* 2 */
 }
 
+
+
 /*
 Set the default cursor for buttons.
 */
@@ -1330,4 +1332,89 @@ nav .material-symbols-outlined {
   border-radius: 9999px;
 }
 
+
+.comment-section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 80px;
+}
+
+.comment-section h2 {
+  display: flex;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  border-bottom: 1px solid gray;
+  padding-bottom: 5px;
+}
+
+.comment-section h2 span {
+  font-size: 0.9rem;
+  margin-left: 10px;
+  margin-top: 1px;
+}
+
+.comment-section .comment-wrapper {
+  margin-bottom: 90px;
+}
+
+.comment-section .comment-wrapper .comment-container {
+  display: flex;
+  gap: 50px;
+}
+
+.comment-section .comment-wrapper .comment {
+  margin-bottom: 80px;
+}
+
+
+.comment-section .comment-wrapper .comment-container .profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+}
+
+.comment-section .comment-wrapper .comment-container .profile img {
+  border-radius: 50%;
+  max-width: 80px;
+  margin-bottom: 20px;
+}
+
+.comment-section .comment-wrapper .comment .text {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 150px);
+}
+
+.comment-section .comment-wrapper .comment .text p {
+  word-wrap: break-word;
+}
+
+.comment-section .comment-wrapper .comment .text aside {
+  font-style: italic;
+  font-size: 0.6rem;
+  margin-top: auto;
+  margin-left: auto;
+}
+
+.comment-section form {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-section textarea::placeholder {
+  color: black;
+}
+
+.comment-section textarea {
+  color: black;
+  border-radius: 0.375rem;
+  padding: 8px;
+}
+
+.comment-section form button {
+  max-width: fit-content;
+  margin-top: 10px;
+}
 
