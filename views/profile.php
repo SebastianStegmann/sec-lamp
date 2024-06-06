@@ -84,13 +84,10 @@ var_dump($user);
     }
     $q->execute();
 
-    $salary = $q->fetch();
-
-    var_dump($salary);
-    ?>
-    <?php if ($_SESSION['user']['user_role_fk'] == '1') : ?>
-      <button class="" onclick="raise(1000, <?php out($profile_id) ?>,<?php out($salary['employee_hourly_pay']) ?>)"> Give a raise</button>
-    <?php endif ?>
+    $salary = $q->fetch(); ?>
+    <?php echo isset( $salary['employee_salary'] ) ? '<p>Salary: ' . $salary['employee_salary'] .' kr.</p>' : ''; ?>
+    <?php echo isset( $salary['employee_hourly_pay'] ) ? '<p>Hourly pay: ' . $salary['employee_hourly_pay'] .' kr.</p>' : ''; ?>
+   
 
     <?php if (isset($_SESSION) && $_SESSION['user']['user_role_fk'] == "1") : ?>
       <p>Admin info</p>
@@ -144,7 +141,6 @@ var_dump($user);
         <input value="<?php out($user['user_last_name']) ?>" id="user_last_name" name="user_last_name" type="text" data-validate="str" data-min="<?= USER_LAST_NAME_MIN ?>" data-max="<?= USER_LAST_NAME_MAX ?>" class="">
       </div>
 
-
       <div class="grid">
         <label for="">
           <span class="">email</span>
@@ -156,12 +152,12 @@ var_dump($user);
         <label for="">
           <span class="">Address</span>
         </label>
-        <input value="<?php out($user['user_address']) ?>" name="user_address" type="text" data-validate="str" data-min="<?= USER_ADDRESS_MIN ?>" data-max="<?= USER_ADDRESS_MAX ?>
+        <input value="<?php out($user['user_address']) ?>" name="user_address" type="text" data-validate="str" data-min="<?= USER_ADDRESS_MIN ?>" data-max="<?= USER_ADDRESS_MAX ?>"
         class="">
       </div>
   
       
-      <button class=" w-full h-10 bg-button_bg rounded-md">Update</button>
+      <button class=" w-full h-10 bg-button_bg rounded-md" type="submit">Update</button>
 
         <!-- ################## UPDATE USER PASSWORD ################## -->
 

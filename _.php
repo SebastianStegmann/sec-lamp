@@ -155,6 +155,9 @@ define('IMAGE_MIME_TYPES', array(
     'image/jpeg',
     'image/png',
 ));
+define('IMAGE_EXTENSIONS', array(
+	'jpg', 'jpeg', 'png'
+));
 
 function _validate_user_profile_picture() {
 	if ( !isset( $_FILES['user_profile_picture'] ) ) {
@@ -172,17 +175,13 @@ function _validate_user_profile_picture() {
 			throw new Exception('Invalid file upload method.', 400);
 		}
 
-		$file_type = $_FILES['user_profile_picture']['type'];
 		$upload_status = $_FILES['user_profile_picture']['error'];
-
-		if ( !in_array( $file_type, IMAGE_MIME_TYPES ) ) {
-			throw new Exception('Invalid file type. Only JPEG and PNG files are allowed.', 400);
-		}
 
 		if ( $upload_status !== UPLOAD_ERR_OK ) {
 			switch ( $upload_status ) {
 				case UPLOAD_ERR_FORM_SIZE:
-					throw new Exception('File size is too large.', 400);
+					// this value can be tampered with in the form. therefore we also check for on the server-side
+					throw new Exception('File size is too large, must be below 2mb.', 400);
 				case UPLOAD_ERR_PARTIAL:
 					throw new Exception('File upload could not complete.', 400);
 				case UPLOAD_ERR_NO_TMP_DIR:
@@ -196,6 +195,35 @@ function _validate_user_profile_picture() {
 				default:
 					throw new Exception('Error uploading image.', 500);
 			}
+		}
+
+		$file_type = $_FILES['user_profile_picture']['type'];
+		$file_size = $_FILES['user_profile_picture']['size'];
+		$max_file_size = 2097152;
+		$image_info = getimagesize($_FILES['user_profile_picture']['tmp_name']);
+		$safe_filename = preg_replace('/[^a-zA-Z0-9-_\.]/', '', basename($_FILES['user_profile_picture']['name']));
+    	$file_extension = pathinfo( $safe_filename, PATHINFO_EXTENSION );
+
+		// Server-side size check
+		if ( $file_size > $max_file_size ) {
+			throw new Exception('File size is too large, must be below 2mb.', 400);
+		}
+
+		// File extension check
+		if ( !in_array( strtolower( $file_extension), IMAGE_EXTENSIONS ) ) {
+			throw new Exception('Invalid file extension. Only JPEG, JPG and PNG files are allowed.', 400);
+		}
+
+		if ( !in_array( $file_type, IMAGE_MIME_TYPES ) ) {
+			throw new Exception('Invalid file type. Only JPEG, JPG and PNG files are allowed.', 400);
+		}
+
+		if ($image_info === false) {
+			throw new Exception('Invalid image file.', 400);
+		}
+	
+		if ($image_info[2] !== IMAGETYPE_JPEG && $image_info[2] !== IMAGETYPE_PNG) {
+			throw new Exception('Invalid image format. Only JPEG, JPG and PNG files are allowed.', 400);
 		}
 	}
 
