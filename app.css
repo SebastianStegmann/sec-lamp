@@ -387,6 +387,8 @@ textarea::placeholder {
   /* 2 */
 }
 
+
+
 /*
 Set the default cursor for buttons.
 */
@@ -1331,3 +1333,16 @@ nav .material-symbols-outlined {
 }
 
 
+.comment-section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 80px;
+}
+
+.comment-section h2 {
+
+}
+
+.comment-section h2 span {
+  font-size: 0.8rem;
+}
