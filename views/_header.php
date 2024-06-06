@@ -1,6 +1,6 @@
 <?php require_once __DIR__ . '/../_.php'; ?>
 <!-- Redirect if not logged in and if not on index or login page -->
-<?php if (!isset($_SESSION['user']) && $_SERVER['REQUEST_URI'] !== '/login' && $_SERVER['REQUEST_URI'] !== '/' && $_SERVER['REQUEST_URI'] !== '/signup') {
+<?php if (!isset($_SESSION['user']) && $_SERVER['REQUEST_URI'] !== '/login' && $_SERVER['REQUEST_URI'] !== '/' && $_SERVER['REQUEST_URI'] !== '/signup' && $_SERVER['REQUEST_URI'] !== '/new-partner') {
   header('Location: /login');
   exit(); // Make sure to exit after sending the Location header
 } ?>
@@ -224,7 +224,7 @@ md:col-start-2 md:col-span-1" aria-label="Sidebar">
             </span>
             View profile
           </a>
-       
+
 
         <?php endif ?>
 
