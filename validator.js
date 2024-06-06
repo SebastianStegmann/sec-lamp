@@ -2,8 +2,8 @@
 // ##############################
 function validate(callback) {
 	const form = event.target
-	console.log(form)
-	// const validate_error = "rgba(240, 130, 240, 0.2)"
+// 	console.log(form)
+// 	// const validate_error = "rgba(240, 130, 240, 0.2)"
 	const validate_error = "hsl(360deg 100% 50% / 1)"
 	form.querySelectorAll("[data-validate]").forEach(function (element) {
 		element.classList.remove("validate_error")
@@ -15,6 +15,10 @@ function validate(callback) {
 		switch (element.getAttribute("data-validate")) {
 			case "file":
 				let file = element.files[0];
+
+				if ( !file ) {
+					return;
+				}
 
 				if( file.size > 2 * 1024 * 1024 ) {
 					element.classList.add("validate_error")

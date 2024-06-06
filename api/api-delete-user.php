@@ -20,7 +20,7 @@ try{
         WHERE user_id = :user_id
     ');
 
-    if ($_SESSION['user']['user_role_name'] == 'admin') {
+    if ($_SESSION['user']['user_role_fk'] == '1') {
         $q->bindValue(':user_id', $_POST['user_id']);
     } else {
         $q->bindValue(':user_id', $_SESSION['user']['user_id']);
@@ -30,7 +30,7 @@ try{
     $user = $q->fetch();
 
 
-    if ($_SESSION['user']['user_role_name'] != 'admin') {
+    if ($_SESSION['user']['user_role_fk'] != '1') {
         if( ! password_verify($_POST['current_user_password'], $user['user_password']) ){
             echo 'Try again';
             return;
@@ -43,7 +43,7 @@ try{
         
         $info .= 'user already deleted';
        
-        if( ! _check_role('admin')) {
+        if( ! _check_role('1')) {
             $info .= 'No admin priveleges';
             echo json_encode(['info' => $info]);
             exit();
@@ -86,7 +86,7 @@ try{
 
     echo json_encode(['info' => $info]);
 
-    if (! _check_role('admin')) {
+    if (! _check_role('1')) {
         header('Location: /logout');
     } 
 
