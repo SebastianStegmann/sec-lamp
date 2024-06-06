@@ -10,7 +10,7 @@ function _db()
 	try {
 		$user_name = "root";
 		// $user_password = ""; // sqlite
-		$user_password = "";
+		$user_password = "root";
 		// $db_connection = 'sqlite:' . __DIR__ . '/database/data.sqlite';
 		$db_connection = "mysql:host=localhost; dbname=exam_db_1sem; charset=utf8mb4";
 
@@ -167,19 +167,19 @@ function _validate_user_profile_picture()
 
 	// Empty input field is still valid
 
-	if ( $_FILES['user_profile_picture']['size'] == 0 ) {
+	if ($_FILES['user_profile_picture']['size'] == 0) {
 		return true;
 	}
 
 	// Ensure fileupload was done via HTTP POST
-	if ( !is_uploaded_file( $_FILES['user_profile_picture']['tmp_name'] ) ) {
+	if (!is_uploaded_file($_FILES['user_profile_picture']['tmp_name'])) {
 		throw new Exception('Invalid file upload method.', 400);
 	}
 
 	$upload_status = $_FILES['user_profile_picture']['error'];
 
-	if ( $upload_status !== UPLOAD_ERR_OK ) {
-		switch ( $upload_status ) {
+	if ($upload_status !== UPLOAD_ERR_OK) {
+		switch ($upload_status) {
 			case UPLOAD_ERR_FORM_SIZE:
 				// this value can be tampered with in the form. therefore we also check for on the server-side
 				throw new Exception('File size is too large, must be below 2mb.', 400);
@@ -204,19 +204,19 @@ function _validate_user_profile_picture()
 	$max_file_size = 2097152;
 	$image_info = getimagesize($_FILES['user_profile_picture']['tmp_name']);
 	$safe_filename = preg_replace('/[^a-zA-Z0-9-_\.]/', '', basename($_FILES['user_profile_picture']['name']));
-	$file_extension = pathinfo( $safe_filename, PATHINFO_EXTENSION );
+	$file_extension = pathinfo($safe_filename, PATHINFO_EXTENSION);
 
 	// Server-side size check
-	if ( $file_size > $max_file_size ) {
+	if ($file_size > $max_file_size) {
 		throw new Exception('File size is too large, must be below 2mb.', 400);
 	}
 
 	// File extension check
-	if ( !in_array( strtolower( $file_extension), IMAGE_EXTENSIONS ) ) {
+	if (!in_array(strtolower($file_extension), IMAGE_EXTENSIONS)) {
 		throw new Exception('Invalid file extension. Only JPEG, JPG and PNG files are allowed.', 400);
 	}
 
-	if ( !in_array( $file_type, IMAGE_MIME_TYPES ) ) {
+	if (!in_array($file_type, IMAGE_MIME_TYPES)) {
 		throw new Exception('Invalid file type. Only JPEG, JPG and PNG files are allowed.', 400);
 	}
 
