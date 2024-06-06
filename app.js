@@ -256,6 +256,28 @@ async function update_user() {
 	}
 }
 
+async function add_comment() {
+	try {
+		const frm = event.target;
+		// console.log(frm)
+
+		const conn = await fetch('/api/api-add-comment.php', {
+			method: 'POST',
+			body: new FormData(frm),
+		});
+
+		const data = await conn.json();
+
+		if (!conn.ok) {
+			console.log(data);	
+			throw new Error(`something went wrong: ${data.info} `);
+		}
+		location.href = data['redirect'];
+	} catch (error) {
+		alert(error);
+	}
+}
+
 async function update_user_password() {
 	console.log('made it to the update func');
 

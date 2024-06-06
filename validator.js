@@ -1,8 +1,9 @@
 
 // ##############################
-function validate(callback) {
+function validate(callback, event) {
 	const form = event.target
 // 	console.log(form)
+	event.preventDefault();
 // 	// const validate_error = "rgba(240, 130, 240, 0.2)"
 	const validate_error = "hsl(360deg 100% 50% / 1)"
 	form.querySelectorAll("[data-validate]").forEach(function (element) {
@@ -29,6 +30,9 @@ function validate(callback) {
 					element.classList.add("validate_error")
 					element.style.border = `1px solid ${validate_error}`
 				}
+				break;
+			case "textarea":
+				console.log(element);
 				break;
 			case "str":
 				if (element.value.length < parseInt(element.getAttribute("data-min")) ||

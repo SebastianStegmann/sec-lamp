@@ -151,6 +151,21 @@ function _validate_user_confirm_password()
 }
 
 // ##############################
+define('PARTNER_COMMENT_MIN', 25);
+define('PARTNER_COMMENT_MAX', 1000);
+function _validate_textcomment() {
+	$comment = $_POST['user_comment'];
+	$comment_stripped_tags = strip_tags( $comment );
+    $comment_stripped_htmlchars = htmlspecialchars( $comment_stripped_tags, ENT_QUOTES, 'UTF-8' );
+
+	if ( strlen( $comment_stripped_htmlchars ) > PARTNER_COMMENT_MAX || strlen( $comment_stripped_htmlchars ) < PARTNER_COMMENT_MIN ) {
+		throw new Exception('Comment must be between ' . PARTNER_COMMENT_MIN . ' and ' . PARTNER_COMMENT_MAX .  ' characters.', 400);
+	}
+
+	return $comment_stripped_htmlchars;
+}
+
+// ##############################
 define('IMAGE_MIME_TYPES', array(
 	'image/jpeg',
 	'image/png',
