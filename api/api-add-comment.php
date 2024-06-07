@@ -88,11 +88,7 @@ try {
     // // echo json_encode($user);
 
     // redirect to current partner ID
-    if ( $user['user_role_fk'] === 1 ) {
-        echo json_encode(['redirect' => '/admin']);
-    } else {
-        echo json_encode(['redirect' => '/restaurant/' . $partner['partner_id']]);
-    }
+    echo json_encode(['redirect' => '/restaurant/' . $partner['partner_id']]);
 
 } catch(Exception $e){
     $status_code = !ctype_digit($e->getCode()) ? 500 : $e->getCode();
