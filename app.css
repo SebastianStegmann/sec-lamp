@@ -1398,6 +1398,10 @@ nav .material-symbols-outlined {
   margin-left: auto;
 }
 
+.comment-section .name {
+  text-align: center;
+}
+
 .comment-section form {
   display: flex;
   flex-direction: column;
