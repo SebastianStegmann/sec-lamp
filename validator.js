@@ -1,9 +1,8 @@
 
 // ##############################
-function validate(callback, event) {
+function validate(callback) {
 	const form = event.target
 // 	console.log(form)
-	event.preventDefault();
 // 	// const validate_error = "rgba(240, 130, 240, 0.2)"
 	const validate_error = "hsl(360deg 100% 50% / 1)"
 	form.querySelectorAll("[data-validate]").forEach(function (element) {
