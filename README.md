@@ -1,13 +1,20 @@
+##############################
+## Database
+If you cannot connect to the database, try changing the value in _.php on line 12:
+- ""
+- "password"
+- "root"
+
 
 ##############################
-Tailwindcss
+## Tailwindcss
 - move to the tailwindcss folder from htdocs
 $ cd tailwindcss
 $ npx tailwindcss -i ./input.css -o ../app.css --watch
 
 
 ##############################
-Faker
+## Faker
 https://github.com/fzaninotto/Faker
 
 ##############################
